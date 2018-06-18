@@ -1,3 +1,11 @@
 from django.shortcuts import render
+from app.models import Operation
 
-# Create your views here.
+
+class OperationListCreateAPIView(generics.ListCreateAPIView):
+    serializer_class = OperationSerializer
+
+    def get_queryset(self):
+        if:
+            pass
+            
