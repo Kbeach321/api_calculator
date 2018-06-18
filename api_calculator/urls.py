@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from app.views import OperationListCreateAPIView, OperationRetrieveDestroyAPIView
 
 #from app.views import
 
@@ -22,4 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.authtoken')),
+
+    path('operations/', OperationListCreateAPIView.as_view()),
+    path('operations/<int:pk>', OperationRetrieveDestroyAPIView.as_view())
 ]
