@@ -2,7 +2,6 @@ from django.shortcuts import render
 from app.models import Operation
 from app.serializers import OperationSerializer
 from rest_framework import generics
-from django.db.models import Q
 from app.permissions import IsOwnerOrReadOnly
 
 
@@ -10,19 +9,27 @@ class OperationListCreateAPIView(generics.ListCreateAPIView):
     serializer_class = OperationSerializer
 
     def get_queryset(self):
-            return Operation.objects.filter(Q(owner=self.request.user))
+            return Operation.objects.filter(owner=self.request.user)
 
     def perform_create(self, serializer):
-        if operator == "+":
-            return result == operand_one + operand_two
-        elif operator == "-":
-            return result == operand_one - operand_two
-        elif operator == "*":
-            return result == operand_one * operand_two
-        elif operator == "/":
-            return result == operand_one / operand_two
 
-        serializer.save(result= self.request.result)
+        data = serializer.validated_data
+
+        operator = data['operator']
+        operand_one = int(data['operand_one'])
+        operand_two = int(data['operand_two'])
+
+        result = 0
+        if operator == "+":
+            result = operand_one + operand_two
+        elif operator == "-":
+            result = operand_one - operand_two
+        elif operator == "*":
+            result = operand_one * operand_two
+        elif operator == "/":
+            result = operand_one / operand_two
+
+        serializer.save(owner= self.request.user, result = result)
 
 class OperationRetrieveDestroyAPIView(generics.RetrieveDestroyAPIView):
     permission_classes = [IsOwnerOrReadOnly]
